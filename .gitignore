@@ -48,3 +48,4 @@ target
 *.jar
 .flattened-pom.xml
 *.iml
+data
