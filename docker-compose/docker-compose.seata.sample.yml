@@ -4,7 +4,7 @@ services:
   account-service:
     image: cike/account-service
     container_name: account-service
-    restart: always
+    #restart: always
     networks:
       - sc-net
     ports:
@@ -18,7 +18,7 @@ services:
   business-service:
     image: cike/business-service
     container_name: business-service
-    restart: always
+    #restart: always
     networks:
       - sc-net
     ports:
@@ -33,7 +33,7 @@ services:
   order-service:
     image: cike/order-service
     container_name: order-service
-    restart: always
+    #restart: always
     networks:
       - sc-net
     ports:
@@ -49,7 +49,7 @@ services:
   storage-service:
     image: cike/storage-service
     container_name: storage-service
-    restart: always
+    #restart: always
     networks:
       - sc-net
     ports:

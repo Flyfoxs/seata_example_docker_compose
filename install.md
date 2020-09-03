@@ -6,6 +6,20 @@ docker network create sc-net
 
 
 
+把各个Service封装到Docker
+
+
+
+添加docker插件
+
+
+
+IP替换为 docker容器名, 并把容器加入网络
+
+
+
+
+
 ### 所有的docker文件绑定到对应网络
 
 
@@ -60,4 +74,3 @@ http://127.0.0.1:18081/seata/rest
 
 
 
-IP替换为 docker容器名, 并把容器加入网络

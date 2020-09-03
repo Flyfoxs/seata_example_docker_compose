@@ -49,3 +49,6 @@ target
 .flattened-pom.xml
 *.iml
 data
+.project
+.classpath
+.settings
