@@ -46,3 +46,5 @@ deploy
 
 target
 *.jar
+.flattened-pom.xml
+*.iml

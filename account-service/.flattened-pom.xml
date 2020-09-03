@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.alibaba.cloud</groupId>
-    <artifactId>spring-cloud-alibaba-examples</artifactId>
+    <artifactId>spring-cloud-alibaba</artifactId>
     <version>2.2.2-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
   </parent>
   <groupId>com.alibaba.cloud</groupId>
   <artifactId>account-service</artifactId>
   <version>2.2.2-SNAPSHOT</version>
   <name>Spring Cloud Starter Alibaba Seata Example - Account Service</name>
-  <description>Example showing how to use features of Spring Cloud Alibaba</description>
-  <url>https://github.com/alibaba/spring-cloud-alibaba/spring-cloud-alibaba-examples/seata-example/account-service</url>
+  <description>Spring Cloud Alibaba</description>
+  <url>https://github.com/alibaba/spring-cloud-alibaba/account-service</url>
   <organization>
     <name>Pivotal Software, Inc.</name>
     <url>https://www.spring.io</url>
@@ -64,21 +63,21 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/alibaba/spring-cloud-alibaba.git/spring-cloud-alibaba-examples/seata-example/account-service</connection>
-    <developerConnection>scm:git:ssh://git@github.com/alibaba/spring-cloud-alibaba.git/spring-cloud-alibaba-examples/seata-example/account-service</developerConnection>
-    <url>https://github.com/alibaba/spring-cloud-alibaba/spring-cloud-alibaba-examples/seata-example/account-service</url>
+    <connection>scm:git:git://github.com/alibaba/spring-cloud-alibaba.git/account-service</connection>
+    <developerConnection>scm:git:ssh://git@github.com/alibaba/spring-cloud-alibaba.git/account-service</developerConnection>
+    <url>https://github.com/alibaba/spring-cloud-alibaba/account-service</url>
   </scm>
   <dependencies>
     <dependency>
       <groupId>com.alibaba.cloud</groupId>
       <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
-      <version>2.2.2-SNAPSHOT</version>
+      <version>2.2.1.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.alibaba.cloud</groupId>
       <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-      <version>2.2.2-SNAPSHOT</version>
+      <version>2.2.1.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

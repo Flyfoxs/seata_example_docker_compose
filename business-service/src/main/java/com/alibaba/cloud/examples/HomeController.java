@@ -67,15 +67,15 @@ public class HomeController {
 	@GetMapping(value = "/seata/rest", produces = "application/json")
 	public String rest() {
 
-		String result = restTemplate.getForObject(
-				"http://127.0.0.1:18082/storage/" + COMMODITY_CODE + "/" + ORDER_COUNT,
-				String.class);
+		String result = restTemplate.getForObject("http://storage-service:18082/storage/"
+				+ COMMODITY_CODE + "/" + ORDER_COUNT, String.class);
 
 		if (!SUCCESS.equals(result)) {
+			System.err.println(result);
 			throw new RuntimeException();
 		}
 
-		String url = "http://127.0.0.1:18083/order";
+		String url = "http://order-service:18083/order";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -92,6 +92,7 @@ public class HomeController {
 			response = restTemplate.postForEntity(url, request, String.class);
 		}
 		catch (Exception exx) {
+			System.err.println(exx);
 			throw new RuntimeException("mock error");
 		}
 		result = response.getBody();
