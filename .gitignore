@@ -52,3 +52,4 @@ data
 .project
 .classpath
 .settings
+.flattened-pom.xml
