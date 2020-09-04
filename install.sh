@@ -28,3 +28,4 @@ docker-compose down
 docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml down
 docker-compose up -d  
 docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d
