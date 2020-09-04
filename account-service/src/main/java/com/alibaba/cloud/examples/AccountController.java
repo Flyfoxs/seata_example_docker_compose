@@ -51,9 +51,9 @@ public class AccountController {
 	public String account(String userId, int money) {
 		LOGGER.info("Account Service ... xid: " + RootContext.getXID());
 
-		if (random.nextBoolean()) {
-			throw new RuntimeException("this is a mock Exception");
-		}
+		// if (random.nextBoolean()) {
+		// throw new RuntimeException("this is a mock Exception");
+		// }
 
 		int result = jdbcTemplate.update(
 				"update account_tbl set money = money - ? where user_id = ?",

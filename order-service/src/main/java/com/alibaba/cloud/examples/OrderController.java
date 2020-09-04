@@ -101,9 +101,9 @@ public class OrderController {
 
 		order.id = keyHolder.getKey().longValue();
 
-		if (random.nextBoolean()) {
-			throw new RuntimeException("this is a mock Exception");
-		}
+		// if (random.nextBoolean()) {
+		// throw new RuntimeException("this is a mock Exception");
+		// }
 
 		LOGGER.info("Order Service End ... Created " + order);
 
