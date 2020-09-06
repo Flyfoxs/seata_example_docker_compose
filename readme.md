@@ -42,6 +42,8 @@
 
 
 ### 增强点
+本repo是依赖于 spring cloud alibaba的官方[示例](https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-examples/seata-example), 使用过程中发现启动不是很方便, 所以修改为一键启动.
+具体的增强点, 如下:
 
 #### 创建网络
 
@@ -50,6 +52,17 @@ docker network create sc-net
 
 
 #### 把各个Service封装到Docker
+
+
+* IP替换为 docker容器名
+
+  之前都是直接访问127.0.0.1的地址, 这样当封装到容器后, 每个服务都是跨容器访问其他容器提供的服务, 不在能通过内部ip访问了. 
+  找到代码中的IP地址, 做类似于下面的替换
+
+
+![image-20200906134538843](https://tva1.sinaimg.cn/large/007S8ZIlly1gigvqhz7o8j327w0ben0e.jpg)
+
+
 
 * 添加docker插件
 
@@ -243,14 +256,6 @@ docker network create sc-net
   ```
 
   
-
-* IP替换为 docker容器名
-
-  之前都是直接访问127.0.0.1的地址, 这样当封装到容器后, 每个服务都是跨容器访问其他容器提供的服务, 不在能通过内部ip访问了
-
-
-![image-20200906134538843](https://tva1.sinaimg.cn/large/007S8ZIlly1gigvqhz7o8j327w0ben0e.jpg)
-
 
 
 * TODO:  通服务注册来声明服务
