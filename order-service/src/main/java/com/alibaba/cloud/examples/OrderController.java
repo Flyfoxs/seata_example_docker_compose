@@ -25,6 +25,7 @@ import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -42,6 +43,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author xiaojing
  */
+
 @RestController
 public class OrderController {
 
@@ -60,6 +62,9 @@ public class OrderController {
 	private final RestTemplate restTemplate;
 
 	private Random random;
+
+	@Autowired
+	private MockConfiguration mockConfiguration;
 
 	public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -101,9 +106,10 @@ public class OrderController {
 
 		order.id = keyHolder.getKey().longValue();
 
-		// if (random.nextBoolean()) {
-		// throw new RuntimeException("this is a mock Exception");
-		// }
+		LOGGER.info("mockException: " + mockConfiguration.getMockException());
+		if (mockConfiguration.getMockException() && random.nextBoolean()) {
+			throw new RuntimeException("this is a mock Exception");
+		}
 
 		LOGGER.info("Order Service End ... Created " + order);
 

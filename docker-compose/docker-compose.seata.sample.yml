@@ -1,5 +1,19 @@
 version: '3'
 services:
+
+
+  storage-service:
+    image: cike/storage-service
+    container_name: storage-service
+    #restart: always
+    networks:
+      - sc-net
+    ports:
+      - 18082:18082
+    env_file: .env
+    environment:
+      TZ: Asia/Shanghai
+
   #授权服务
   account-service:
     image: cike/account-service
@@ -12,8 +26,8 @@ services:
     env_file: .env
     environment:
       TZ: Asia/Shanghai
-    # depends_on:
-    #   - authentication-server
+    depends_on:
+      - storage-service
 
   business-service:
     image: cike/business-service
@@ -26,8 +40,8 @@ services:
     env_file: .env
     environment:
       TZ: Asia/Shanghai
-    # depends_on:
-    #   - authentication-server
+    depends_on:
+     - order-service
 
     
   order-service:
@@ -41,22 +55,9 @@ services:
     env_file: .env
     environment:
       TZ: Asia/Shanghai
-    # depends_on:
-    #   - authentication-server
+    depends_on:
+     - storage-service
 
-        
 
-  storage-service:
-    image: cike/storage-service
-    container_name: storage-service
-    #restart: always
-    networks:
-      - sc-net
-    ports:
-      - 18082:18082
-    env_file: .env
-    environment:
-      TZ: Asia/Shanghai
-    # depends_on:
-    #   - authentication-server
+
 
