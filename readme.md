@@ -280,6 +280,12 @@ cd ..
 docker logs -f order-service
 ```
 
- 
 
- 
+ ### Others
+
+* 修改Nacos保存的配置
+  * 不抛出异常
+curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
+  * 抛出异常, 造成回滚
+  
+    curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"

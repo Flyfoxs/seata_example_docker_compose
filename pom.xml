@@ -17,8 +17,8 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
     <name>Spring Cloud Alibaba</name>
-    <description>Spring Cloud Alibaba</description>
-    <url>https://github.com/alibaba/spring-cloud-alibaba</url>
+    <description>Seata Example</description>
+    <url>https://github.com/Flyfoxs/seata_example_docker_compose</url>
 
     <licenses>
         <license>

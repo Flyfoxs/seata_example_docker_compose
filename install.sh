@@ -23,7 +23,7 @@ mvn package && mvn docker:build
 
 
 
-### 启动所有相关容器
+
 cd ../docker-compose
 # 关闭相关服务, 准备重启
 docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml down
@@ -36,3 +36,4 @@ docker-compose up mysql-init
 
 #启动业务服务
 docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d
+

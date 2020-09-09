@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -64,7 +66,7 @@ public class OrderController {
 	private Random random;
 
 	@Autowired
-	private MockConfiguration mockConfiguration;
+	private ApplicationContext context;
 
 	public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -105,9 +107,10 @@ public class OrderController {
 		}, keyHolder);
 
 		order.id = keyHolder.getKey().longValue();
-
-		LOGGER.info("mockException: " + mockConfiguration.getMockException());
-		if (mockConfiguration.getMockException() && random.nextBoolean()) {
+		Boolean mockException = context.getEnvironment().getProperty("mockException",
+				Boolean.class, false);
+		LOGGER.info("mockException: " + mockException);
+		if (mockException && random.nextBoolean()) {
 			throw new RuntimeException("this is a mock Exception");
 		}
 
