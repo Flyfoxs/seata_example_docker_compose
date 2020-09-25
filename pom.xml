@@ -16,7 +16,7 @@
     <artifactId>spring-cloud-alibaba</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>Spring Cloud Alibaba</name>
+    <name>Seata Example</name>
     <description>Seata Example</description>
     <url>https://github.com/Flyfoxs/seata_example_docker_compose</url>
 

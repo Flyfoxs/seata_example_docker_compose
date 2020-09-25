@@ -10,7 +10,12 @@
 
 1. 启动服务
 
-    修改配置, 是否模拟回滚
+    ```
+    # 一键启动
+    ./install.sh
+    ```
+
+    修改配置, 开/关 模拟回滚
 
     * 正常事务, 没有异常抛出
 
@@ -20,12 +25,7 @@
 
        order-service/src/main/resources/application.properties, 修改**test.mockException=true**
 
-    ```
-    # 一键启动
-    ./install.sh
-    ```
 
-    ​		
 
 2. 验证:
 
@@ -48,6 +48,23 @@
 #### 创建网络
 
 docker network create sc-net
+
+
+
+#### 增强容器之间的依赖关系
+
+因为mysql启动需要一定时间, 如果直接开启mysql初始化, 可能会导致初始化失败. 所以启用healthcheck, 确保mysql是真正的启动了
+
+```dockerfile
+
+  mysql:
+    image: mysql:5.7
+		.....
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+```
 
 
 
@@ -285,7 +302,6 @@ docker logs -f order-service
 
 * 修改Nacos保存的配置
   * 不抛出异常
-curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
+    curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
   * 抛出异常, 造成回滚
-  
     curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"
