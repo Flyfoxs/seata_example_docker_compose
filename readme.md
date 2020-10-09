@@ -2,46 +2,82 @@
 
 
 
-### 快速体验
+### 1. 快速体验
 
-0. 安装docker, docker-compose
+#### 	安装docker, docker-compose
 
+这里提供了Centos的安装版本
 
+```shell
+sudo yum install -y yum-utils
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
 
-1. 启动服务
-
-    ```
-    # 一键启动
-    ./install.sh
-    ```
-
-    修改配置, 开/关 模拟回滚
-
-    * 正常事务, 没有异常抛出
-
-       order-service/src/main/resources/application.properties, 修改**test.mockException=false**
-
-    * 一定概率抛出异常,模拟回滚
-
-       order-service/src/main/resources/application.properties, 修改**test.mockException=true**
+sudo curl -L "https://github.com/docker/compose/releases/download/1.27.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "http://10.0.2.55:60001/other/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
 
 
 
-2. 验证:
+#### 	启动服务
 
-   ```shell
-   通过浏览器访问下面2个地址
-   http://127.0.0.1:18081/seata/feign
-   
-   http://127.0.0.1:18081/seata/rest
-   ```
+```
+# 一键启动
+./install.sh
+```
 
 
 
+#### 	验证
+
+```shell
+通过浏览器访问下面2个地址
+http://127.0.0.1:18081/seata/feign
+
+http://127.0.0.1:18081/seata/rest
+```
+
+
+3. 修改配置, 开/关 模拟回滚:
+
+
+   * 正常事务, 没有异常抛出
+
+     order-service/src/main/resources/application.properties, 修改**test.mockException=false**
+
+   * 一定概率抛出异常,模拟回滚
+
+     order-service/src/main/resources/application.properties, 修改**test.mockException=true**
 
 
 
-### 增强点
+#### 	单独调试一个业务服务
+
+比如:order-service
+
+
+``` shell
+docker stop order-service
+cd order-service
+rm -rf target
+mvn package && mvn docker:build
+cd ../docker-compose 
+docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d order-service
+cd ..
+docker logs -f order-service
+```
+
+
+ ### 
+
+
+
+### 2. 增强点
 本repo是依赖于 spring cloud alibaba的官方[示例](https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-examples/seata-example), 使用过程中发现启动不是很方便, 所以修改为一键启动.
 具体的增强点, 如下:
 
@@ -281,27 +317,43 @@ docker network create sc-net
 
 
 
-### 单独调试其中一个业务服务
 
-比如:order-service
+ ### 3. Others
 
+#### 修改Nacos保存的配置
 
-``` shell
-docker stop order-service
-cd order-service
-rm -rf target
-mvn package && mvn docker:build
-cd ../docker-compose 
-docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d order-service
-cd ..
-docker logs -f order-service
-```
+* 不抛出异常
+  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
+* 抛出异常, 造成回滚
+  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"
 
 
- ### Others
 
-* 修改Nacos保存的配置
-  * 不抛出异常
-    curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
-  * 抛出异常, 造成回滚
-    curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"
+#### EnableDiscoveryClient 不再是必须的了
+
+Spring Cloud Edgware开始，`@EnableDiscoveryClient` 或`@EnableEurekaClient` 可省略了。
+
+
+
+
+
+#### 服务调用关系
+
+business_service
+	storageService(echo)
+	orderService
+		account-service
+
+
+
+
+
+ #### 基础服务
+
+* Nacos 
+
+http://localhost:8848  nacos/nacos
+
+* 
+
+  

@@ -71,6 +71,7 @@ public class HomeController {
 				+ COMMODITY_CODE + "/" + ORDER_COUNT, String.class);
 
 		if (!SUCCESS.equals(result)) {
+			LOGGER.error("==storage-service:", result);
 			System.err.println(result);
 			throw new RuntimeException();
 		}
@@ -92,7 +93,7 @@ public class HomeController {
 			response = restTemplate.postForEntity(url, request, String.class);
 		}
 		catch (Exception exx) {
-			System.err.println(exx);
+			LOGGER.error("==order-service:", exx);
 			throw new RuntimeException("mock error");
 		}
 		result = response.getBody();
@@ -110,12 +111,14 @@ public class HomeController {
 		String result = storageService.storage(COMMODITY_CODE, ORDER_COUNT);
 
 		if (!SUCCESS.equals(result)) {
+			LOGGER.error("==storageService," + storageService);
 			throw new RuntimeException();
 		}
 
 		result = orderService.order(USER_ID, COMMODITY_CODE, ORDER_COUNT);
 
 		if (!SUCCESS.equals(result)) {
+			LOGGER.error("==orderService," + orderService);
 			throw new RuntimeException();
 		}
 

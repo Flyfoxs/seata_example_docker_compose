@@ -31,8 +31,8 @@ docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml down
 # 启动基础服务
 docker-compose -f docker-compose.yml up -d
 
-# DB 初始化
-docker-compose up mysql-init
+## DB 初始化
+#docker-compose up mysql-init
 
 #启动业务服务
 docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d
