@@ -1,6 +1,20 @@
 version: '2.1'
 services:
 
+  mysql-init:
+    image: mysql:5.7
+    container_name:  sc-mysql-init
+    command: /init-db.sh
+    networks:
+      - sc-net
+    volumes:
+      - ../db.init:/sql/db.init
+      - ./init-db.sh:/init-db.sh
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   storage-service:
     image: cike/storage-service
@@ -11,6 +25,8 @@ services:
     ports:
       - 18082:18082
     env_file: .env
+    depends_on:
+      - mysql-init
     environment:
       TZ: Asia/Shanghai
 

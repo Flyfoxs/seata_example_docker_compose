@@ -56,26 +56,14 @@ services:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: root123
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-proot123"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-proot123", "--protocol=tcp"]
       timeout: 20s
       retries: 10
 
-  mysql-init:
-    image: mysql:5.7
-    command: /init-db.sh
-    networks:
-      - sc-net
-    volumes:
-      - ../db.init:/sql/db.init
-      - ./init-db.sh:/init-db.sh
-    environment:
-      MYSQL_ROOT_PASSWORD: root123
-    depends_on:
-      mysql:
-        condition: service_healthy
 
   seata-server:
     image: seataio/seata-server:latest
+    container_name:  sc-seata
     hostname: seata-server
     networks:
       - sc-net
