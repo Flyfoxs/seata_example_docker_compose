@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${REGISTER_HOST:localhost}:8848
+      config:
+        server-addr: ${REGISTER_HOST:localhost}:8848
+        file-extension: yaml
+        prefix: example
+  profiles:
+    active: dev
+
+
