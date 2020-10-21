@@ -16,20 +16,12 @@
 
 package com.alibaba.cloud.examples;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Random;
-
 import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -41,9 +33,15 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Random;
+
+import com.alibaba.cloud.examples.OderApplication.AccountService;
 
 /**
  * @author xiaojing
@@ -67,14 +65,18 @@ public class OrderController {
 
 	private final RestTemplate restTemplate;
 
+	private final AccountService accountService;
+
 	private Random random;
 
 	@Value("${mockException:false}")
 	private boolean mockException;
 
-	public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
+	public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate,
+			AccountService accountService) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.restTemplate = restTemplate;
+		this.accountService = accountService;
 		this.random = new Random();
 	}
 
@@ -130,20 +132,23 @@ public class OrderController {
 	}
 
 	private void invokerAccountService(int orderMoney) {
-		String url = "http://account-service:18084/account";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-
-		map.add("userId", USER_ID);
-		map.add("money", orderMoney + "");
-
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
-				map, headers);
-
-		ResponseEntity<String> response = restTemplate.postForEntity(url, request,
-				String.class);
+		// String url = "http://account-service:18084/account";
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		//
+		// MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		//
+		// map.add("userId", USER_ID);
+		// map.add("money", orderMoney + "");
+		//
+		// HttpEntity<MultiValueMap<String, String>> request = new
+		// HttpEntity<MultiValueMap<String, String>>(
+		// map, headers);
+		//
+		// ResponseEntity<String> response = restTemplate.postForEntity(url, request,
+		// String.class);
+		LOGGER.info("orderMoney:" + orderMoney);
+		accountService.account(USER_ID, orderMoney);
 	}
 
 }

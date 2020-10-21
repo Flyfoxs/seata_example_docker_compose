@@ -18,13 +18,20 @@ package com.alibaba.cloud.examples;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 /**
  * @author xiaojing
  */
 @SpringBootApplication
+@EnableFeignClients
 public class OderApplication {
 
 	public static void main(String[] args) {
@@ -34,6 +41,15 @@ public class OderApplication {
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+
+	@FeignClient("account-service")
+	public interface AccountService {
+
+		@PostMapping(path = "/account")
+		String account(@RequestParam("userId") String commodityCode,
+				@RequestParam("money") int money);
+
 	}
 
 }
