@@ -1,27 +1,27 @@
 cd "$(dirname "$0")"
-#
-#### 创建网络
-#docker network create sc-net || true
-#
-#### 把代码打包到容器
-#cd ./account-service
-#rm -rf target
-#mvn package && mvn docker:build
-#
-#cd ../business-service
-#rm -rf target
-#mvn package && mvn docker:build
-#
-#
-#cd ../order-service
-#rm -rf target
-#mvn package && mvn docker:build
-#
-#cd ../storage-service
-#rm -rf target
-#mvn package && mvn docker:build
-#
-#cd ../
+
+### 创建网络
+docker network create sc-net || true
+
+### 把代码打包到容器
+cd ./account-service
+rm -rf target
+mvn package && mvn docker:build
+
+cd ../business-service
+rm -rf target
+mvn package && mvn docker:build
+
+
+cd ../order-service
+rm -rf target
+mvn package && mvn docker:build
+
+cd ../storage-service
+rm -rf target
+mvn package && mvn docker:build
+
+cd ../
 
 
 

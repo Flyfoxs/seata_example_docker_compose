@@ -1,7 +1,12 @@
 package com.alibaba.cloud.examples;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RefreshScope
 public class ConfigController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigController.class);
+
+	@Autowired
+	ApplicationContext context;
 
 	@Value("${username:lily}")
 	private String username;
@@ -25,8 +35,17 @@ public class ConfigController {
 	}
 
 	@RequestMapping("/mockException")
-	public boolean getMockException() {
-		return mockException;
+	public String getMockException() {
+		LOGGER.info("mockException:" + mockException);
+		Environment env = context.getEnvironment();
+		LOGGER.info("env:" + env);
+
+		LOGGER.info("Active:" + env.getActiveProfiles());
+		LOGGER.info("Default:" + env.getDefaultProfiles());
+
+		boolean mockException2 = env.getProperty("mockException", Boolean.class);
+		LOGGER.info("mockException from env:" + mockException2);
+		return mockException + "," + mockException2;
 	}
 
 }

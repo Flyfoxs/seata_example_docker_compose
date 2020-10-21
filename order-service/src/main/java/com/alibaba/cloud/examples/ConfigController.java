@@ -35,7 +35,7 @@ public class ConfigController {
 	}
 
 	@RequestMapping("/mockException")
-	public String getMockException() {
+	public boolean getMockException() {
 		LOGGER.info("mockException:" + mockException);
 		Environment env = context.getEnvironment();
 		LOGGER.info("env:" + env);
@@ -45,7 +45,7 @@ public class ConfigController {
 
 		boolean mockException2 = env.getProperty("mockException", Boolean.class);
 		LOGGER.info("mockException from env:" + mockException2);
-		return mockException + "," + mockException2;
+		return mockException;
 	}
 
 }

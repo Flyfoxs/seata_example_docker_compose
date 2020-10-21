@@ -43,37 +43,24 @@ http://127.0.0.1:18081/seata/rest
 ```
 
 
-3. 修改配置, 开/关 模拟回滚:
+
+#### 切换模式
+
+动态切换异常模式, 不用重启. 直接通过Nacos动态更新配置
+
+* 不抛出异常
+
+  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
+
+* 抛出异常, 造成回滚
+
+  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"
+
+* 查看当前模式
+
+  http://127.0.0.1:18083/mockException
 
 
-   * 正常事务, 没有异常抛出
-
-     order-service/src/main/resources/application.properties, 修改**test.mockException=false**
-
-   * 一定概率抛出异常,模拟回滚
-
-     order-service/src/main/resources/application.properties, 修改**test.mockException=true**
-
-
-
-#### 	单独调试一个业务服务
-
-比如:order-service
-
-
-``` shell
-docker stop order-service
-cd order-service
-rm -rf target
-mvn package && mvn docker:build
-cd ../docker-compose 
-docker-compose -f docker-compose.yml -f docker-compose.seata.sample.yml up -d order-service
-cd ..
-docker logs -f order-service
-```
-
-
- ### 
 
 
 
@@ -146,169 +133,33 @@ docker network create sc-net
 
 * 编辑docker-compose文件
 
-  * 基础中间件 docker-compose
+  基础中间件 docker-compose(sc-mysql,sc-rabbitmq,sc-nacos-standalone,sc-redis,sc-seata)
 
   docker-compose/docker-compose.yml
 
-  ```
-  version: '3'
-  services:
   
-    nacos:
-      image: nacos/nacos-server:1.1.3
-      container_name: sc-nacos-standalone
-      networks:
-        - sc-net
-      environment:
-        - PREFER_HOST_MODE=hostname
-        - MODE=standalone
-      volumes:
-        - ../data/nacos-server/logs/:/home/nacos/logs
-      networks:
-        - sc-net
-      ports:
-        - "8848:8848"
-  
-  
-    redis: 
-      image: redis:alpine
-      container_name: sc-redis
-      #restart: always
-      volumes:
-        - ../data/redis:/data
-      environment:
-        - REDIS_PASSWORD=123456
-      networks:
-        - sc-net
-      ports:
-        - 6379:6379
-      env_file: .env
-  
-    rabbitmq:
-      image: rabbitmq:management-alpine
-      container_name: sc-rabbitmq
-      #restart: always
-      volumes:
-        - ../data/rabbitmq:/var/lib/rabbitmq/mnesia
-      networks:
-        - sc-net
-      ports:
-        - 5672:5672
-        - 15672:15672
-      env_file: .env
-  
-    mysql:
-      image: mysql:5.7
-      container_name: sc-mysql
-      #restart: always
-      networks:
-        - sc-net
-      ports:
-        - 3306:3306
-      volumes:
-        - ../data/mysql:/var/lib/mysql
-      environment:
-        TZ: Asia/Shanghai
-        MYSQL_ROOT_PASSWORD: root123
-  
-    mysql-init:
-      image: mysql:5.7
-      command: /init-db.sh
-      networks:
-        - sc-net
-      volumes:
-        - ../db.init:/sql/db.init
-        - ./init-db.sh:/init-db.sh
-      environment:
-        MYSQL_ROOT_PASSWORD: root123
-  
-  
-    seata-server:
-      image: seataio/seata-server:latest
-      hostname: seata-server
-      networks:
-        - sc-net
-      ports:
-        - 8091:8091
-      environment:
-        - SEATA_PORT=8091
-  
-  networks:
-    sc-net:
-      external: true
-  
-  ```
+
+* 添加healthcheck
+
+  * Nacos
+
+  一直尝试通过POST 添加 Nacos配置, 直至成功
+
+  ![image-20201021102007096](https://tva1.sinaimg.cn/large/007S8ZIlly1gjwqohfdqqj31k606g0tq.jpg)
 
   
 
-  * 业务服务
+  * Mysql
 
-  docker-compose/docker-compose.seata.sample.yml
+  启动Mysql容器时, 通过healthcheck一直检查mysql状态
 
-  ```
-  version: '3'
-  services:
-  
-    storage-service:
-      image: cike/storage-service
-      container_name: storage-service
-      #restart: always
-      networks:
-        - sc-net
-      ports:
-        - 18082:18082
-      env_file: .env
-      environment:
-        TZ: Asia/Shanghai
-  
-    #授权服务
-    account-service:
-      image: cike/account-service
-      container_name: account-service
-      #restart: always
-      networks:
-        - sc-net
-      ports:
-        - 18084:18084
-      env_file: .env
-      environment:
-        TZ: Asia/Shanghai
-      depends_on:
-        - storage-service
-  
-    business-service:
-      image: cike/business-service
-      container_name: business-service
-      #restart: always
-      networks:
-        - sc-net
-      ports:
-        - 18081:18081
-      env_file: .env
-      environment:
-        TZ: Asia/Shanghai
-      depends_on:
-       - order-service
-  
-      
-    order-service:
-      image: cike/order-service
-      container_name: order-service
-      #restart: always
-      networks:
-        - sc-net
-      ports:
-        - 18083:18083
-      env_file: .env
-      environment:
-        TZ: Asia/Shanghai
-      depends_on:
-       - storage-service
-  
-  
-  ```
+  ![image-20201021101833980](https://tva1.sinaimg.cn/large/007S8ZIlly1gjwqmzg1w5j318k0mmwh5.jpg)
 
-  
+  ​		
+
+
+
+
 
 
 * TODO:  通服务注册来声明服务
@@ -320,20 +171,11 @@ docker network create sc-net
 
  ### 3. Others
 
-#### 修改Nacos保存的配置
-
-* 不抛出异常
-  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20false%0Axx%3A%20false"
-* 抛出异常, 造成回滚
-  curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example-dev.yaml&group=DEFAULT_GROUP&type=yaml&content=mockException%3A%20true%0Axx%3A%20false"
-
 
 
 #### EnableDiscoveryClient 不再是必须的了
 
 Spring Cloud Edgware开始，`@EnableDiscoveryClient` 或`@EnableEurekaClient` 可省略了。
-
-
 
 
 
@@ -354,6 +196,5 @@ business_service
 
 http://localhost:8848  nacos/nacos
 
-* 
 
-  
+
