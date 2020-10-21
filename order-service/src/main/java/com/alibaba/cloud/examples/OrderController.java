@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -39,6 +41,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,6 +50,7 @@ import org.springframework.web.client.RestTemplate;
  */
 
 @RestController
+@RefreshScope
 public class OrderController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
@@ -65,8 +69,8 @@ public class OrderController {
 
 	private Random random;
 
-	@Autowired
-	private ApplicationContext context;
+	@Value("${mockException:false}")
+	private boolean mockException;
 
 	public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -107,8 +111,7 @@ public class OrderController {
 		}, keyHolder);
 
 		order.id = keyHolder.getKey().longValue();
-		Boolean mockException = context.getEnvironment().getProperty("mockException",
-				Boolean.class, false);
+
 		LOGGER.info("mockException: " + mockException);
 		if (mockException && random.nextBoolean()) {
 			throw new RuntimeException("this is a mock Exception");
