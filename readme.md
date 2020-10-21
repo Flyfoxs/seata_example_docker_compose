@@ -4,7 +4,7 @@
 
 ### 1. 快速体验
 
-#### 	安装docker, docker-compose
+#### 	1.1 安装docker, docker-compose
 
 这里提供了Centos的安装版本
 
@@ -24,7 +24,7 @@ docker-compose --version
 
 
 
-#### 	启动服务
+#### 	1.2 启动服务
 
 ```
 # 一键启动
@@ -33,7 +33,7 @@ docker-compose --version
 
 
 
-#### 	验证
+#### 	1.3 验证
 
 ```shell
 通过浏览器访问下面2个地址
@@ -44,7 +44,7 @@ http://127.0.0.1:18081/seata/rest
 
 
 
-#### 切换模式
+#### 1.4 切换异常模式
 
 动态切换异常模式, 不用重启. 直接通过Nacos动态更新配置
 
@@ -68,13 +68,13 @@ http://127.0.0.1:18081/seata/rest
 本repo是依赖于 spring cloud alibaba的官方[示例](https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-examples/seata-example), 使用过程中发现启动不是很方便, 所以修改为一键启动.
 具体的增强点, 如下:
 
-#### 创建网络
+#### 2.1 创建网络
 
 docker network create sc-net
 
 
 
-#### 增强容器之间的依赖关系
+#### 2.2 增强容器之间的依赖关系
 
 因为mysql启动需要一定时间, 如果直接开启mysql初始化, 可能会导致初始化失败. 所以启用healthcheck, 确保mysql是真正的启动了
 
@@ -91,7 +91,7 @@ docker network create sc-net
 
 
 
-#### 把各个Service封装到Docker
+#### 2.3 把各个Service封装到Docker
 
 
 * IP替换为 docker容器名
@@ -173,13 +173,13 @@ docker network create sc-net
 
 
 
-#### EnableDiscoveryClient 不再是必须的了
+#### 3.1 EnableDiscoveryClient 不再是必须的了
 
 Spring Cloud Edgware开始，`@EnableDiscoveryClient` 或`@EnableEurekaClient` 可省略了。
 
 
 
-#### 服务调用关系
+#### 3.2 服务调用关系
 
 business_service
 	storageService(echo)
@@ -188,13 +188,9 @@ business_service
 
 
 
-
-
- #### 基础服务
+ #### 3.3 基础服务
 
 * Nacos 
 
 http://localhost:8848  nacos/nacos
-
-
 
